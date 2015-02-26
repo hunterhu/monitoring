@@ -35,6 +35,12 @@ setInterval(function() {
       var time = new Date().getTime();
       /* TODO: localhost will be replaced by MAC Address for data.id and key */
       data.id = 'localhost:'+time;
+      /* TODO: key: localhost, score: time, value: JSON.stringify(data)
+       *       with time goes by, the set key localhost's data will increase,
+       *       how do we maintain that so that we won't fill up disk space?
+       *       it would be better to delete from Redis old data scores/values,
+       *       and how long would a key's data will be kept for reference?
+       */
       redis.zadd('localhost', time, JSON.stringify(data), function(err, reply) {
         if(err) {
           console.error('redis: '+ err);
