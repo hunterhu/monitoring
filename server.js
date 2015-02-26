@@ -37,6 +37,9 @@ io.configure(function (){
 
 io.sockets.on('connection', function (socket) {
   console.log('got socket.io connection - id: %s', socket.id);
+  /* the keys[] will contain all available targets' mac addresses
+   * Question is: how to get all Redis keys in an array
+   */
   var keys = ['localhost'];
   var assembler = new StreamAssembler(keys, socket, redis);
 
