@@ -16,6 +16,7 @@ function Monitor(keys) {
   var sync = new redisSync.Sync();
   var myKeys = keys;
 
+  /* whenever a Redis DB command like zadd happens, this is run */
   sync.on('command', function(command, args) {
     var key = Buffer.concat(args[0]).toString();
     if (myKeys.indexOf(key) !== -1) {

@@ -160,6 +160,9 @@ jQuery(document).ready(function() {
       displayData(color);
     }
 
+    /* this is the other end of the socket
+     * StreamAssembler.js Line 177 socket.emit()
+     */
     socket.on('dUpdates', function(newUpdates) {
       console.log(newUpdates);
       shiftData(newUpdates)

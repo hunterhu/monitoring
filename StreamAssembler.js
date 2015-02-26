@@ -91,6 +91,7 @@ function StreamAssembler(keys, socket, redisClient) {
 
     console.log('Getting raw data from: ' + key);
     redisClient.zrange(key, '-100', '-1', 'withscores', function(err, results) {
+    console.log(results);
       if(err)
         return cb(err);
 
@@ -134,8 +135,12 @@ function StreamAssembler(keys, socket, redisClient) {
     if (monitor) {
       monitor.addKeys(keys);
     } else {
+      /* All keys with 1 monitor? that is fine since we want to monitor all
+       * changes for all the keys
+       */
       console.log('Creating new monitor');
       monitor = new m.Monitor(keys);
+      /* event emitted from monitor.js #24 that.emit('changed') */
       monitor.on('changed', handleCommand);
       monitor.connect();
     }
@@ -153,6 +158,7 @@ function StreamAssembler(keys, socket, redisClient) {
     var tlId, id, values;
     var key, suId, prop, v, enc, eng;
     var newUpdates = [];
+    /* whenever zadd happens, new update pushed */
     if(command === 'zadd') {
       var values = [];
       for(i = 0; i < args.length; i += 2) {
@@ -168,6 +174,7 @@ function StreamAssembler(keys, socket, redisClient) {
       moveServerWindow();
 
       console.log('emitting', Object.keys(newUpdates).length, 'udpates');
+      /* then socket will emit dUpdates, client.js will get update on socket */
       socket.emit('dUpdates', safeObjectToSend(newUpdates));
     }
   }
