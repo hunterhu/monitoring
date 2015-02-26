@@ -9,6 +9,7 @@
 var nodestat = require('node-stat');
 var redis  = require('redis').createClient();
 
+/*
 function insert(data) {
   var sysInfo = JSON.parse(data);
   var time = new Date().getTime();
@@ -26,6 +27,7 @@ function insert(data) {
       }
     });
 }
+*/
 
 setInterval(function() {
     nodestat.get('stat','net','load', function(err, data) {
