@@ -33,6 +33,7 @@ setInterval(function() {
     nodestat.get('stat','net','load', function(err, data) {
       console.log(data);
       var time = new Date().getTime();
+      /* TODO: localhost will be replaced by MAC Address for data.id and key */
       data.id = 'localhost:'+time;
       redis.zadd('localhost', time, JSON.stringify(data), function(err, reply) {
         if(err) {
