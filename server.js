@@ -36,22 +36,23 @@ io.configure(function (){
 });
 
 io.sockets.on('connection', function (socket) {
-  console.log('got socket.io connection - id: %s', socket.id);
-  /* the keys[] will contain all available targets' mac addresses
-   * Question is: how to get all Redis keys in an array
-   */
-  var keys = ['localhost'];
-  var assembler = new StreamAssembler(keys, socket, redis);
+    console.log('got socket.io connection - id: %s', socket.id);
 
-  socket.on('myEvent', function() {
-    console.log('"myEvent" event received');
-  });
+    redis.keys('*', function (err, keys) {
+        if (err)
+            return console.log(err);
+        console.log(keys);
 
-  socket.on('disconnect', function() {
-    console.log('disconnected !!!');
-    // needs to be stopped explicitly or it will continue listening to redis for updates
-    assembler.stop();
-  });
+        var assembler = new StreamAssembler(keys, socket, redis);
+
+        socket.on('myEvent', function() {
+            console.log('"myEvent" event received');
+        });
+
+        socket.on('disconnect', function() {
+        console.log('disconnected !!!');
+        // needs to be stopped explicitly or it will continue listening to redis for updates
+        assembler.stop();
+        });
+    });
 });
-
-
