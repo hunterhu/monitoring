@@ -45,10 +45,6 @@ io.sockets.on('connection', function (socket) {
 
         var assembler = new StreamAssembler(keys, socket, redis);
 
-        socket.on('myEvent', function() {
-            console.log('"myEvent" event received');
-        });
-
         socket.on('disconnect', function() {
         console.log('disconnected !!!');
         // needs to be stopped explicitly or it will continue listening to redis for updates
