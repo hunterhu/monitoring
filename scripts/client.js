@@ -268,6 +268,7 @@ jQuery(document).ready(function() {
       console.log('io error', err);
     }
   });
+  /* initial update only to start drawing all elements */
   socket.on('updates', function(newUpdates) {
     console.log(newUpdates);
     updates = newUpdates;
