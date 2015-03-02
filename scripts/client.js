@@ -166,6 +166,11 @@ jQuery(document).ready(function() {
      */
     socket.on('dUpdates', function(newUpdates) {
       console.log(newUpdates);
+      /*
+       * new data for running time redrawing
+       * Note that the shiftData() passed in as an argument, it could be any of
+       * the 3: shiftCpuData, shiftNetData, shiftLoadData.
+       */
       shiftData(newUpdates)
       redraw();
     });
