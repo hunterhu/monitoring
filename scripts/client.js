@@ -274,7 +274,11 @@ jQuery(document).ready(function() {
       console.log('io error', err);
     }
   });
-  /* initial update only to start drawing all elements */
+  /* initial update only to start drawing all elements
+   * The calls in the initial update setup all later runtime updates "dUpdate"
+   * event for each id;  and so far, the id is hardcoded as #cpu, #net, #load
+   * which are meant for only 3 graphs
+   */
   socket.on('updates', function(newUpdates) {
     console.log(newUpdates);
     updates = newUpdates;
