@@ -61,6 +61,7 @@ jQuery(document).ready(function() {
   }
 
   function getCpuData() {
+    /* are these cpu1,2 are overwritten by global cpu1/2[]? */
     cpu1 = [];
     cpu2 = [];
     var len = list.length;
