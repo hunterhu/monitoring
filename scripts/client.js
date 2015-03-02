@@ -171,7 +171,7 @@ jQuery(document).ready(function() {
        * Note that the shiftData() passed in as an argument, it could be any of
        * the 3: shiftCpuData, shiftNetData, shiftLoadData.
        */
-      shiftData(newUpdates)
+      shiftData(newUpdates);
       redraw();
     });
   }
