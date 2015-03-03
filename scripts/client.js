@@ -13,13 +13,8 @@ jQuery(document).ready(function() {
   var updates = {};
 
   var list = [];
-  var load1 = [];
-  var load2 = [];
-  var load3 = [];
   var net1 = [];
   var net2 = [];
-  var cpu1 = [];
-  var cpu2 = [];
 
   function sortUpdates() {
     list = [];
@@ -29,20 +24,6 @@ jQuery(document).ready(function() {
     list.sort(function(a, b) {
       return a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0;
     });
-  }
-
-  function getLoadData() {
-    load1 = [];
-    load2 = [];
-    load3 = [];
-    var len = list.length;
-    var i;
-    for (i=0; i < len; i++) {
-      var u = updates[list[i][0]];
-      load1.push(u.data.load[0]);
-      load2.push(u.data.load[1]);
-      load3.push(u.data.load[2]);
-    }
   }
 
   function getNetData() {
@@ -56,22 +37,6 @@ jQuery(document).ready(function() {
       if (data) {
         net1.push(u.data.net.total.receive/1000);
         net2.push(u.data.net.total.send/1000);
-      }
-    }
-  }
-
-  function getCpuData() {
-    /* are these cpu1,2 are overwritten by global cpu1/2[]? */
-    cpu1 = [];
-    cpu2 = [];
-    var len = list.length;
-    var i;
-    for (i=0; i < len; i++) {
-      var u = updates[list[i][0]];
-      var data = u.data;
-      if (data) {
-        cpu1.push(100 - u.data.stat.cpu.cpu0.idle);
-        cpu2.push(100 - u.data.stat.cpu.cpu1.idle);
       }
     }
   }
@@ -176,37 +141,6 @@ jQuery(document).ready(function() {
     });
   }
 
-  function displayLoadData (color) {
-    $('#load1')[0].innerText = load1[0].toFixed(2);
-    $('#load2')[0].innerText = load2[0].toFixed(2);
-    $('#load3')[0].innerText = load3[0].toFixed(2);
-
-    $('.load1')[0].style.color = color('1-minute');
-    $('.load2')[0].style.color = color('5-minute');
-    $('.load3')[0].style.color = color('15-minute');
-  }
-
-  function shiftLoadData (newUpdates) {
-    var i;
-    for (i=0; i < newUpdates.length; i += 2) {
-      var u = newUpdates[i];
-      load1.pop()
-      load1.splice(0, 0, u.load[0]);
-      load2.pop()
-      load2.splice(0, 0, u.load[1]);
-      load3.pop()
-      load3.splice(0, 0, u.load[2]);
-    }
-  }
-
-  function drawLoadGraph () {
-    var id = '#load';
-    var title = 'Load Average';
-    var data = {'1-minute': load1, '5-minute': load2, '15-minute': load3};
-
-    displayGraph(id, data, displayLoadData, shiftLoadData);
-  }
-
   function displayNetData (color) {
     $('#net1')[0].innerText = net1[0].toFixed(2) + ' Kb';
     $('#net2')[0].innerText = net2[0].toFixed(2) + ' Kb';
@@ -234,33 +168,6 @@ jQuery(document).ready(function() {
     displayGraph(id, data, displayNetData, shiftNetData);
   }
 
-  function displayCpuData (color) {
-    $('#cpu1')[0].innerText = cpu1[0].toFixed(2) + ' %';
-    $('#cpu2')[0].innerText = cpu2[0].toFixed(2) + ' %';
-
-    $('.cpu1')[0].style.color = color('CPU 1');
-    $('.cpu2')[0].style.color = color('CPU 2');
-  }
-
-  function shiftCpuData (newUpdates) {
-    var i;
-    for (i=0; i < newUpdates.length; i += 2) {
-      var u = newUpdates[i];
-      cpu1.pop()
-      cpu1.splice(0, 0, 100 - u.stat.cpu.cpu0.idle);
-      cpu2.pop()
-      cpu2.splice(0, 0, 100 - u.stat.cpu.cpu1.idle);
-    }
-  }
-
-  function drawCpuGraph () {
-    var id = '#cpu';
-    var title = 'CPU usage';
-    var data = {'CPU 1': cpu1, 'CPU 2': cpu2};
-
-    displayGraph(id, data, displayCpuData, shiftCpuData, [0, 100]);
-  }
-
   socket.on('connect', function() {
     console.log('connected');
   });
@@ -283,12 +190,8 @@ jQuery(document).ready(function() {
     console.log(newUpdates);
     updates = newUpdates;
     sortUpdates();
-    getLoadData();
-    drawLoadGraph();
     getNetData();
     drawNetGraph();
-    getCpuData();
-    drawCpuGraph();
   });
 
 });

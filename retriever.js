@@ -30,7 +30,7 @@ function insert(data) {
 */
 
 setInterval(function() {
-    nodestat.get('stat','net','load', function(err, data) {
+    nodestat.get('net', function(err, data) {
       console.log(data);
       var time = new Date().getTime();
       /* TODO: localhost will be replaced by MAC Address for data.id and key */
