@@ -15,7 +15,7 @@ var app = express();
 var io = require('socket.io');
 var http = require('http');
 var server = http.createServer(app);
-var redis = require('redis').createClient();
+var redis = require('redis').createClient('6379','10.200.146.142');
 var StreamAssembler = require('./StreamAssembler').StreamAssembler;
 
 app.use(express.bodyParser());
