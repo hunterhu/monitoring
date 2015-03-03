@@ -90,6 +90,7 @@ function StreamAssembler(keys, socket, redisClient) {
   function getRawData(key, cb) {
 
     console.log('Getting raw data from: ' + key);
+    /* this determins what the range to display realtime data with */
     redisClient.zrange(key, '-100', '-1', 'withscores', function(err, results) {
     console.log(results);
       if(err)
