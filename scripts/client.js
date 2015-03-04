@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
   var list = [];
   var net1 = [];
   var net2 = [];
-  var graph_id = 0;
+  var graph_id = 1;
   var macs = [];
 
   function sortUpdates() {
@@ -164,19 +164,28 @@ jQuery(document).ready(function() {
     }
   }
 
+  function locateMac(mac) {
+      for (var j = graph_id-1; j>0; j--) {
+          console.log('macs[',j,']=',macs[j]);
+          console.log('mac=',mac);
+          if ( macs[j] === mac ) {
+              console.log('locateMac returning:',j);
+              return j;
+          }
+      }
+      console.log('checkMac returning: 0');
+      return 0;
+  }
+
   function drawNetGraph (mac) {
     console.log('initial updates for:',mac);
-    /*
-     * Save the id(mac) in macs[] associated with the graph_id,0,1,2,3...
-     * Later, we will look into macs[] to decide which graph_id to redraw/update
-     */
-    macs[++graph_id]=mac;
+
     console.log(macs);
 
     var title = 'Net usage';
     var data = {'Received': net1, 'Sent': net2};
 
-    displayGraph(graph_id, data, displayNetData, shiftNetData);
+    displayGraph(locateMac(mac), data, displayNetData, shiftNetData);
   }
 
   socket.on('connect', function() {
@@ -192,22 +201,44 @@ jQuery(document).ready(function() {
       console.log('io error', err);
     }
   });
+
+  /* search for a mac in macs[] */
+  function checkMac(mac) {
+      for (var j = 1; j<graph_id; j++) {
+          console.log('macs[',j,']=',macs[j]);
+          console.log('mac=',mac);
+          if ( macs[j] === mac ) {
+              console.log('checkMac returning true');
+              return true;
+          }
+      }
+      console.log('checkMac returning false');
+      return false;
+  }
+
   /* initial update only to start drawing all elements
    * The calls in the initial update setup all later runtime updates "dUpdate"
    * event for each id;  and so far, the id is hardcoded as #cpu, #net, #load
    * which are meant for only 3 graphs
    */
   socket.on('updates', function(newUpdates) {
-    console.log(newUpdates);
+    console.log('newUpdates:',newUpdates);
     updates = newUpdates;
     /* save updates into list[] and sort the list[] */
     sortUpdates();
     var len=list.length;
-    var u=updates[list[len-1][0]];
-    /* Get net data out of updates and put them into net1/2[] */
-    getNetData();
-    /* use mac address as unique identifier */
-    drawNetGraph(u.data.mac);
+    console.log('len:',len);
+    for(var i = 0; i<len; i++) {
+        var u=updates[list[i][0]];
+        var mac = u.data.mac;
+        console.log('checking mac:', mac);
+        if ( checkMac(mac) == false ) {
+            macs[graph_id++]=mac;
+            /* Get net data out of updates and put them into net1/2[] */
+            getNetData();
+            /* use mac address as unique identifier */
+            drawNetGraph(mac);
+        }
+    }
   });
-
 });
