@@ -83,7 +83,7 @@ jQuery(document).ready(function() {
 
     // create an SVG element inside the #graph div that fills 100% of the div
     //var graph = d3.select(id).append("svg:svg").attr("width", "100%").attr("height", "100%");
-    var graph = d3.select(id).append("svg")
+    var graph = d3.select('#p'+id).append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -171,6 +171,7 @@ jQuery(document).ready(function() {
      * Later, we will look into macs[] to decide which graph_id to redraw/update
      */
     macs[++graph_id]=mac;
+    console.log(macs);
 
     var title = 'Net usage';
     var data = {'Received': net1, 'Sent': net2};
