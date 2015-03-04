@@ -6,8 +6,14 @@
 *
 * Licensed under the MIT license */
 
+var redis_port = '6379';
+var redis_ip = '10.200.146.142';
+var redis  = require('redis').createClient(redis_port, redis_ip);
+
+var mac = require('getmac');
+var ip = require('ip');
+
 var nodestat = require('node-stat');
-var redis  = require('redis').createClient();
 
 /*
 function insert(data) {
@@ -31,20 +37,23 @@ function insert(data) {
 
 setInterval(function() {
     nodestat.get('net', function(err, data) {
-      console.log(data);
-      var time = new Date().getTime();
-      /* TODO: localhost will be replaced by MAC Address for data.id and key */
-      data.id = 'localhost:'+time;
-      /* TODO: key: localhost, score: time, value: JSON.stringify(data)
-       *       with time goes by, the set key localhost's data will increase,
-       *       how do we maintain that so that we won't fill up disk space?
-       *       it would be better to delete from Redis old data scores/values,
-       *       and how long would a key's data will be kept for reference?
-       */
-      redis.zadd('localhost', time, JSON.stringify(data), function(err, reply) {
-        if(err) {
-          console.error('redis: '+ err);
+        mac.getMac(function(err,macAddress){
+            if (err)  throw err;
+            data.mac = macAddress;
+        });
+        data.ip = ip.address();
+        var time = new Date().getTime();
+
+        function write_redis() {
+            data.id = data.mac + ':' + time;
+            console.log(data);
+            redis.zadd(data.mac, time, JSON.stringify(data), function(err, reply) {
+                if(err) {
+                    console.error('redis: '+ err);
+                }
+            });
         }
-      });
-    });
-}, 1000);
+        /* wait for mac.getMac to finish */
+        setTimeout(write_redis, 1000);
+   });
+}, 2000);
