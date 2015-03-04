@@ -15,6 +15,8 @@ jQuery(document).ready(function() {
   var list = [];
   var net1 = [];
   var net2 = [];
+  var graph_id = 0;
+  var macs = [];
 
   function sortUpdates() {
     /* reset the list[] */
@@ -162,12 +164,18 @@ jQuery(document).ready(function() {
     }
   }
 
-  function drawNetGraph (id) {
-    console.log('initial updates for:',id);
+  function drawNetGraph (mac) {
+    console.log('initial updates for:',mac);
+    /*
+     * Save the id(mac) in macs[] associated with the graph_id,0,1,2,3...
+     * Later, we will look into macs[] to decide which graph_id to redraw/update
+     */
+    macs[++graph_id]=mac;
+
     var title = 'Net usage';
     var data = {'Received': net1, 'Sent': net2};
 
-    displayGraph(id, data, displayNetData, shiftNetData);
+    displayGraph(graph_id, data, displayNetData, shiftNetData);
   }
 
   socket.on('connect', function() {
@@ -197,7 +205,8 @@ jQuery(document).ready(function() {
     var u=updates[list[len-1][0]];
     /* Get net data out of updates and put them into net1/2[] */
     getNetData();
-    drawNetGraph(u.data.id);
+    /* use mac address as unique identifier */
+    drawNetGraph(u.data.mac);
   });
 
 });
