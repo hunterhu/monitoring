@@ -17,6 +17,7 @@ jQuery(document).ready(function() {
   var net2 = [];
 
   function sortUpdates() {
+    /* reset the list[] */
     list = [];
     var k;
     for (k in updates) { list.push([k, updates[k].t]);}
@@ -27,6 +28,7 @@ jQuery(document).ready(function() {
   }
 
   function getNetData() {
+    /* reset the net1/2[] */
     net1 = [];
     net2 = [];
     var len = list.length;
@@ -160,8 +162,8 @@ jQuery(document).ready(function() {
     }
   }
 
-  function drawNetGraph () {
-    var id = '#net';
+  function drawNetGraph (id) {
+    console.log('initial updates for:',id);
     var title = 'Net usage';
     var data = {'Received': net1, 'Sent': net2};
 
@@ -189,9 +191,13 @@ jQuery(document).ready(function() {
   socket.on('updates', function(newUpdates) {
     console.log(newUpdates);
     updates = newUpdates;
+    /* save updates into list[] and sort the list[] */
     sortUpdates();
+    var len=list.length;
+    var u=updates[list[len-1][0]];
+    /* Get net data out of updates and put them into net1/2[] */
     getNetData();
-    drawNetGraph();
+    drawNetGraph(u.data.id);
   });
 
 });
