@@ -13,8 +13,8 @@ jQuery(document).ready(function() {
   var updates = {};
 
   var list = [];
-  var net1 = [];
-  var net2 = [];
+  var net1 = [[]];
+  var net2 = [[]];
   var graph_id = 1;
   var macs = [];
 
@@ -29,18 +29,18 @@ jQuery(document).ready(function() {
     });
   }
 
-  function getNetData() {
+  function getNetData(id) {
     /* reset the net1/2[] */
-    net1 = [];
-    net2 = [];
+    net1[id] = [];
+    net2[id] = [];
     var len = list.length;
     var i;
     for (i=0; i < len; i++) {
       var u = updates[list[i][0]];
       var data = u.data;
       if (data) {
-        net1.push(u.data.net.total.receive/1000);
-        net2.push(u.data.net.total.send/1000);
+        net1[id].push(u.data.net.total.receive/1000);
+        net2[id].push(u.data.net.total.send/1000);
       }
     }
   }
@@ -110,7 +110,7 @@ jQuery(document).ready(function() {
       .attr("d", function(d) { return line(d.values); })
       .style("stroke", function(d) { return color(d.name); });
 
-    displayData(color);
+    displayData(color, id);
 
     function redraw() {
       // static update without animation
@@ -127,7 +127,7 @@ jQuery(document).ready(function() {
         //.attr("d", line); // apply the new data values
         .attr("d", function(d) { return line(d.values); })
 
-      displayData(color);
+      displayData(color, id);
     }
 
     /* this is the other end of the socket
@@ -145,9 +145,10 @@ jQuery(document).ready(function() {
     });
   }
 
-  function displayNetData (color) {
-    $('#net1')[0].innerText = net1[0].toFixed(2) + ' Kb';
-    $('#net2')[0].innerText = net2[0].toFixed(2) + ' Kb';
+  function displayNetData (color, id) {
+    console.log('all #net1:',$('#net1'));
+    $('#net1')[0].innerText = net1[id][0].toFixed(2) + ' Kb';
+    $('#net2')[0].innerText = net2[id][0].toFixed(2) + ' Kb';
 
     $('.net1')[0].style.color = color('Received');
     $('.net2')[0].style.color = color('Sent');
@@ -157,10 +158,12 @@ jQuery(document).ready(function() {
     var i;
     for (i=0; i < newUpdates.length; i += 2) {
       var u = newUpdates[i];
-      net1.pop()
-      net1.splice(0, 0, u.net.total.receive/1000);
-      net2.pop()
-      net2.splice(0, 0, u.net.total.send/1000);
+      var id = locateMac(u.mac);
+
+      net1[id].pop()
+      net1[id].splice(0, 0, u.net.total.receive/1000);
+      net2[id].pop()
+      net2[id].splice(0, 0, u.net.total.send/1000);
     }
   }
 
@@ -181,11 +184,12 @@ jQuery(document).ready(function() {
     console.log('initial updates for:',mac);
 
     console.log(macs);
+    var i = locateMac(mac);
 
     var title = 'Net usage';
-    var data = {'Received': net1, 'Sent': net2};
+    var data = {'Received': net1[i], 'Sent': net2[i]};
 
-    displayGraph(locateMac(mac), data, displayNetData, shiftNetData);
+    displayGraph(i, data, displayNetData, shiftNetData);
   }
 
   socket.on('connect', function() {
@@ -233,9 +237,10 @@ jQuery(document).ready(function() {
         var mac = u.data.mac;
         console.log('checking mac:', mac);
         if ( checkMac(mac) == false ) {
-            macs[graph_id++]=mac;
+            macs[graph_id]=mac;
             /* Get net data out of updates and put them into net1/2[] */
-            getNetData();
+            getNetData(graph_id);
+            graph_id++;
             /* use mac address as unique identifier */
             drawNetGraph(mac);
         }
