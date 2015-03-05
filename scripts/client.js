@@ -17,6 +17,7 @@ jQuery(document).ready(function() {
   var net2 = [[]];
   var graph_id = 1;
   var macs = [];
+  var ips = [];
 
   function sortUpdates() {
     /* reset the list[] */
@@ -150,8 +151,14 @@ jQuery(document).ready(function() {
     $('#net1'+id)[0].innerText = net1[id][0].toFixed(2) + ' Kb';
     $('#net2'+id)[0].innerText = net2[id][0].toFixed(2) + ' Kb';
 
+    $('#mac'+id)[0].innerText = macs[id];
+    $('#ip'+id)[0].innerText = ips[id];
+
     $('.net1'+id)[0].style.color = color('Received');
     $('.net2'+id)[0].style.color = color('Sent');
+
+    $('.mac'+id)[0].style.color = color('Received');
+    $('.ip'+id)[0].style.color = color('Sent');
   }
 
   function shiftNetData (newUpdates) {
@@ -235,9 +242,11 @@ jQuery(document).ready(function() {
     for(var i = 0; i<len; i++) {
         var u=updates[list[i][0]];
         var mac = u.data.mac;
+        var ip = u.data.ip;
         console.log('checking mac:', mac);
         if ( checkMac(mac) == false ) {
             macs[graph_id]=mac;
+            ips[graph_id]=ip;
             /* Get net data out of updates and put them into net1/2[] */
             getNetData(graph_id);
             graph_id++;
