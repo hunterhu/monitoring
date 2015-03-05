@@ -147,11 +147,11 @@ jQuery(document).ready(function() {
 
   function displayNetData (color, id) {
     console.log('all #net1:',$('#net1'));
-    $('#net1')[0].innerText = net1[id][0].toFixed(2) + ' Kb';
-    $('#net2')[0].innerText = net2[id][0].toFixed(2) + ' Kb';
+    $('#net1'+id)[0].innerText = net1[id][0].toFixed(2) + ' Kb';
+    $('#net2'+id)[0].innerText = net2[id][0].toFixed(2) + ' Kb';
 
-    $('.net1')[0].style.color = color('Received');
-    $('.net2')[0].style.color = color('Sent');
+    $('.net1'+id)[0].style.color = color('Received');
+    $('.net2'+id)[0].style.color = color('Sent');
   }
 
   function shiftNetData (newUpdates) {
