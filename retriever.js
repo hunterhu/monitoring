@@ -36,7 +36,7 @@ function insert(data) {
 */
 
 setInterval(function() {
-    nodestat.get('net', function(err, data) {
+    nodestat.get('net', 'stat', 'load', function(err, data) {
         mac.getMac(function(err,macAddress){
             if (err)  throw err;
             data.mac = macAddress;
