@@ -4,28 +4,34 @@
 
 .plot {
     float: left;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .graph {
     float: left;
-    width: 600;
-    height: 250;
+    width: 100;
+    height: 100;
 }
 
 .data {
     float: left;
-    margin-top: 20px;
+    margin-top: 1px;
 }
 
 .title {
     float: left;
     font-weight: bold;
-    margin-right: 5px;
+    margin-right: 1px;
+    font-size: 70%
 }
 
 .value {
     float: left;
+    font-size: 70%
+}
+
+.axis text {
+      font: 6px sans-serif;
 }
 
 .axis path,
@@ -41,5 +47,5 @@
 .line {
   fill: none;
   stroke: steelblue;
-  stroke-width: 1.5px;
+  stroke-width: 2px;
 }

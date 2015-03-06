@@ -59,9 +59,9 @@ jQuery(document).ready(function() {
       };
     });
 
-    var margin = {top: 10, right: 50, bottom: 20, left: 10},
-    width = 600 - margin.left - margin.right,
-    height = 250 - margin.top - margin.bottom;
+    var margin = {top: 5, right: 5, bottom: 5, left: 5},
+    width = 100 - margin.left - margin.right,
+    height = 100 - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
       .domain([0, 60])
