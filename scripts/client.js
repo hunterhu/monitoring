@@ -20,6 +20,8 @@ jQuery(document).ready(function() {
   var graph_id = 1;
   var macs = [];
   var ips = [];
+  var uptime = [];
+  var freemem = [];
 
   function sortUpdates() {
     /* reset the list[] */
@@ -154,24 +156,30 @@ jQuery(document).ready(function() {
   }
 
   function displayNetData (color, id) {
-    console.log('all #net1:',$('#net1'));
-    $('#net1'+id)[0].innerText = net1[id][0].toFixed(2) + ' Kb';
-    $('#net2'+id)[0].innerText = net2[id][0].toFixed(2) + ' Kb';
-
-    $('#mac'+id)[0].innerText = macs[id];
-    $('#ip'+id)[0].innerText = ips[id];
+    //console.log('all #net1:',$('#net1'));
+    $('#net1'+id)[0].innerText = net1[id][0].toFixed(2) + ' KB';
+    $('#net2'+id)[0].innerText = net2[id][0].toFixed(2) + ' KB';
 
     $('.net1'+id)[0].style.color = color('Received');
     $('.net2'+id)[0].style.color = color('Sent');
 
+
+    $('#mac'+id)[0].innerText = macs[id];
+    $('#ip'+id)[0].innerText = ips[id];
+    $('#uptime'+id)[0].innerText = uptime[id] + ' Min';
+    $('#freemem'+id)[0].innerText = freemem[id] + ' MB';
+
     $('.mac'+id)[0].style.color = color('Received');
     $('.ip'+id)[0].style.color = color('Sent');
+    $('.uptime'+id)[0].style.color = color('Received');
+    $('.freemem'+id)[0].style.color = color('Sent');
 
     $('#cpu1'+id)[0].innerText = cpu1[id][0].toFixed(2) + ' %';
     $('#cpu2'+id)[0].innerText = cpu2[id][0].toFixed(2) + ' %';
 
     $('.cpu1'+id)[0].style.color = color('CPU 1');
     $('.cpu2'+id)[0].style.color = color('CPU 2');
+
   }
 
   function shiftNetData (newUpdates) {
@@ -261,10 +269,14 @@ jQuery(document).ready(function() {
         var u=updates[list[i][0]];
         var mac = u.data.mac;
         var ip = u.data.ip;
+        var up = u.data.uptime;
+        var free = u.data.freemem;
         console.log('checking mac:', mac);
         if ( checkMac(mac) == false ) {
             macs[graph_id]=mac;
             ips[graph_id]=ip;
+            uptime[graph_id]=up;
+            freemem[graph_id]=free;
             /* Get net data out of updates and put them into net1/2[] */
             getNetData(graph_id);
             graph_id++;

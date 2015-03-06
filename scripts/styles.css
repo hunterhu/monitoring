@@ -22,12 +22,12 @@
     float: bottom;
     font-weight: bold;
     margin-right: 1px;
-    font-size: 65%
+    font-size: 60%
 }
 
 .value {
     float: right;
-    font-size: 65%
+    font-size: 60%
 }
 
 .axis text {
