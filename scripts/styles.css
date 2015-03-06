@@ -19,19 +19,19 @@
 }
 
 .title {
-    float: left;
+    float: bottom;
     font-weight: bold;
     margin-right: 1px;
-    font-size: 70%
+    font-size: 65%
 }
 
 .value {
-    float: left;
-    font-size: 70%
+    float: right;
+    font-size: 65%
 }
 
 .axis text {
-      font: 6px sans-serif;
+      font: 4px sans-serif;
 }
 
 .axis path,
@@ -47,5 +47,5 @@
 .line {
   fill: none;
   stroke: steelblue;
-  stroke-width: 2px;
+  stroke-width: 1px;
 }

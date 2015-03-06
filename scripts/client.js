@@ -66,7 +66,7 @@ jQuery(document).ready(function() {
       };
     });
 
-    var margin = {top: 5, right: 5, bottom: 5, left: 5},
+    var margin = {top: 5, right: 5, bottom: 5, left: 10},
     width = 100 - margin.left - margin.right,
     height = 100 - margin.top - margin.bottom;
 
