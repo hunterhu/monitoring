@@ -15,6 +15,8 @@ jQuery(document).ready(function() {
   var list = [];
   var net1 = [[]];
   var net2 = [[]];
+  var cpu1 = [[]];
+  var cpu2 = [[]];
   var graph_id = 1;
   var macs = [];
   var ips = [];
@@ -34,6 +36,8 @@ jQuery(document).ready(function() {
     /* reset the net1/2[] */
     net1[id] = [];
     net2[id] = [];
+    cpu1[id] = [];
+    cpu2[id] = [];
     var len = list.length;
     var i;
     for (i=0; i < len; i++) {
@@ -42,6 +46,9 @@ jQuery(document).ready(function() {
       if (data) {
         net1[id].push(u.data.net.total.receive/1000);
         net2[id].push(u.data.net.total.send/1000);
+
+        cpu1[id].push(100 - u.data.stat.cpu.cpu0.idle);
+        cpu2[id].push(100 - u.data.stat.cpu.cpu1.idle);
       }
     }
   }
@@ -159,6 +166,12 @@ jQuery(document).ready(function() {
 
     $('.mac'+id)[0].style.color = color('Received');
     $('.ip'+id)[0].style.color = color('Sent');
+
+    $('#cpu1'+id)[0].innerText = cpu1[id][0].toFixed(2) + ' %';
+    $('#cpu2'+id)[0].innerText = cpu2[id][0].toFixed(2) + ' %';
+
+    $('.cpu1'+id)[0].style.color = color('CPU 1');
+    $('.cpu2'+id)[0].style.color = color('CPU 2');
   }
 
   function shiftNetData (newUpdates) {
@@ -171,6 +184,11 @@ jQuery(document).ready(function() {
       net1[id].splice(0, 0, u.net.total.receive/1000);
       net2[id].pop()
       net2[id].splice(0, 0, u.net.total.send/1000);
+
+      cpu1[id].pop()
+      cpu1[id].splice(0, 0, 100 - u.stat.cpu.cpu0.idle);
+      cpu2[id].pop()
+      cpu2[id].splice(0, 0, 100 - u.stat.cpu.cpu1.idle);
     }
   }
 
