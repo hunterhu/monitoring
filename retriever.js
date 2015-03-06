@@ -50,6 +50,7 @@ setInterval(function() {
         var time = new Date().getTime();
 
         function write_redis() {
+            data.id = data.mac + ':' + time;
             console.log(data);
             redis.zadd(data.mac, time, JSON.stringify(data), function(err, reply) {
                 if(err) {
