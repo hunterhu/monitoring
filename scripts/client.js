@@ -23,6 +23,7 @@ jQuery(document).ready(function() {
   var uptime = [];
   var freemem = [];
   var lastUpdateTime = [];
+  var targetsStatus = [];
 
   function sortUpdates() {
     /* reset the list[] */
@@ -123,29 +124,25 @@ jQuery(document).ready(function() {
 
     displayData(color, id);
 
-    function displayFilledColor(fillColor) {
-        d3.select('#p'+id).select("svg").remove();
-        var graph_rect = d3.select('#p'+id).append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-
-        graph_rect.append("rect")
+    function displayFilledColor(fillColor, target) {
+        d3.select('#p'+target).select('svg').append("rect")
           .attr("width", "100%")
           .attr("height", "100%")
           .attr("fill", fillColor)
-          .attr("fill-opacity", opacity);
+          .attr("fill-opacity", "0.2");
     }
 
-    /* checking every 1 minute */
+    /* checking every 10 seconds */
     var Checking = setInterval(function () {
-        var currentMinutes = ~~(new Date().getTime() / 60000);
+        var currentSecs = ~~(new Date().getTime() / 1000);
         for (var i = 1; i <= graph_id; i++) {
-            if(currentMinutes - lastUpdateTime[id] > 1) {
-                displayFilledColor("red", "0.5");
+            if((currentSecs - lastUpdateTime[i]) > 10 && targetsStatus[i]) {
+                displayFilledColor("red", i);
+                targetsStatus[i] = 0;
             }
         }
     },
-    60000);
+    10000);
 
     function redraw() {
       // static update without animation
@@ -170,9 +167,6 @@ jQuery(document).ready(function() {
      */
     socket.on('dUpdates', function(newUpdates) {
       console.log(newUpdates);
-      var minutes = new Date().getTime() / 60000;
-      lastUpdateTime[id] = minutes;
-
 
       /*
        * new data for running time redrawing
@@ -241,6 +235,10 @@ jQuery(document).ready(function() {
 
       uptime[id]=u.uptime;
       freemem[id]= u.freemem;
+
+      var Secs = ~~(new Date().getTime() / 1000);
+      lastUpdateTime[id] = Secs;
+      targetsStatus[id] = 1;
     }
   }
 
@@ -321,6 +319,7 @@ jQuery(document).ready(function() {
             ips[graph_id]=ip;
             uptime[graph_id]=up;
             freemem[graph_id]=free;
+            targetsStatus[graph_id] = 1;
             /* Get net data out of updates and put them into net1/2[] */
             getNetData(graph_id);
             graph_id++;
