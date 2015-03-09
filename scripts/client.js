@@ -122,6 +122,7 @@ jQuery(document).ready(function() {
 
     displayData(color, id);
 
+
     function redraw() {
       // static update without animation
       if (domain === undefined) {
@@ -136,6 +137,19 @@ jQuery(document).ready(function() {
         //.data([load]) // set the new data
         //.attr("d", line); // apply the new data values
         .attr("d", function(d) { return line(d.values); })
+
+        /*
+        d3.select('#p'+id).select("svg").remove();
+        var graph_rect = d3.select('#p'+id).append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+
+        graph_rect.append("rect")
+          .attr("width", "100%")
+          .attr("height", "100%")
+          .attr("fill", "yellow")
+          .attr("fill-opacity", "0.7");
+        */
 
       displayData(color, id);
     }
@@ -156,6 +170,7 @@ jQuery(document).ready(function() {
   }
 
   function displayNetData (color, id) {
+
     //console.log('all #net1:',$('#net1'));
     $('#net1'+id)[0].innerText = net1[id][0].toFixed(2) + ' KB';
     $('#net2'+id)[0].innerText = net2[id][0].toFixed(2) + ' KB';
