@@ -129,7 +129,7 @@ jQuery(document).ready(function() {
           .attr("width", "100%")
           .attr("height", "100%")
           .attr("fill", fillColor)
-          .attr("fill-opacity", "0.2");
+          .attr("fill-opacity", "0.5");
     }
 
     /* checking every 10 seconds */
