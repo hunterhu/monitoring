@@ -181,7 +181,18 @@ jQuery(document).ready(function() {
 
     $('#mac'+id)[0].innerText = macs[id];
     $('#ip'+id)[0].innerText = ips[id];
-    $('#uptime'+id)[0].innerText = uptime[id] + ' Min';
+
+    var up = uptime[id];
+    if( up < 60 ) {
+        $('#uptime'+id)[0].innerText = uptime[id] + ' Min';
+    } else if (up < (60*24)) {
+        $('#uptime'+id)[0].innerText = (uptime[id]/60).toFixed(2) + ' Hour';
+    } else if (up < (60*24*30)) {
+        $('#uptime'+id)[0].innerText = (uptime[id]/(60*24)).toFixed(2) + ' Day';
+    } else {
+        $('#uptime'+id)[0].innerText = (uptime[id]/(60*24*30)).toFixed(2) + ' Month';
+    }
+
     $('#freemem'+id)[0].innerText = freemem[id] + ' MB';
 
     $('.mac'+id)[0].style.color = color('Received');
