@@ -22,6 +22,7 @@ jQuery(document).ready(function() {
   var ips = [];
   var uptime = [];
   var freemem = [];
+  var lastUpdateTime = [];
 
   function sortUpdates() {
     /* reset the list[] */
@@ -122,6 +123,29 @@ jQuery(document).ready(function() {
 
     displayData(color, id);
 
+    function displayFilledColor(fillColor) {
+        d3.select('#p'+id).select("svg").remove();
+        var graph_rect = d3.select('#p'+id).append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+
+        graph_rect.append("rect")
+          .attr("width", "100%")
+          .attr("height", "100%")
+          .attr("fill", fillColor)
+          .attr("fill-opacity", opacity);
+    }
+
+    /* checking every 1 minute */
+    var Checking = setInterval(function () {
+        var currentMinutes = ~~(new Date().getTime() / 60000);
+        for (var i = 1; i <= graph_id; i++) {
+            if(currentMinutes - lastUpdateTime[id] > 1) {
+                displayFilledColor("red", "0.5");
+            }
+        }
+    },
+    60000);
 
     function redraw() {
       // static update without animation
@@ -138,19 +162,6 @@ jQuery(document).ready(function() {
         //.attr("d", line); // apply the new data values
         .attr("d", function(d) { return line(d.values); })
 
-        /*
-        d3.select('#p'+id).select("svg").remove();
-        var graph_rect = d3.select('#p'+id).append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-
-        graph_rect.append("rect")
-          .attr("width", "100%")
-          .attr("height", "100%")
-          .attr("fill", "yellow")
-          .attr("fill-opacity", "0.7");
-        */
-
       displayData(color, id);
     }
 
@@ -159,6 +170,10 @@ jQuery(document).ready(function() {
      */
     socket.on('dUpdates', function(newUpdates) {
       console.log(newUpdates);
+      var minutes = new Date().getTime() / 60000;
+      lastUpdateTime[id] = minutes;
+
+
       /*
        * new data for running time redrawing
        * Note that the shiftData() passed in as an argument, it could be any of
