@@ -238,6 +238,9 @@ jQuery(document).ready(function() {
       cpu1[id].splice(0, 0, 100 - u.stat.cpu.cpu0.idle);
       cpu2[id].pop()
       cpu2[id].splice(0, 0, 100 - u.stat.cpu.cpu1.idle);
+
+      uptime[id]=u.uptime;
+      freemem[id]= u.freemem;
     }
   }
 
