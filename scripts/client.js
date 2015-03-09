@@ -125,7 +125,7 @@ jQuery(document).ready(function() {
     displayData(color, id);
 
     function displayFilledColor(fillColor, target) {
-        d3.select('#p'+target).select('svg').append("rect")
+        d3.select('#p'+target).select('svg').append('rect')
           .attr("width", "100%")
           .attr("height", "100%")
           .attr("fill", fillColor)
@@ -238,7 +238,10 @@ jQuery(document).ready(function() {
 
       var Secs = ~~(new Date().getTime() / 1000);
       lastUpdateTime[id] = Secs;
-      targetsStatus[id] = 1;
+      if( 0 === targetsStatus[id]) {
+          d3.select('#p'+id).select('svg').select('rect').remove();
+          targetsStatus[id] = 1;
+      }
     }
   }
 
