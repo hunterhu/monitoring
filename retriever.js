@@ -61,4 +61,4 @@ setInterval(function() {
         /* wait for mac.getMac to finish */
         setTimeout(write_redis, 1000);
    });
-}, 1000);
+}, 2000);
