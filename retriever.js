@@ -7,7 +7,7 @@
 * Licensed under the MIT license */
 
 var redis_port = '6379';
-var redis_ip = '10.200.146.162';
+var redis_ip = '10.10.0.100';
 var redis  = require('redis').createClient(redis_port, redis_ip);
 var os = require('os');
 
